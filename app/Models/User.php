@@ -26,7 +26,7 @@ class User extends Authenticatable
         'address',
         'governorate',
         'city',
-        'status',
+        'type',
     ];
 
     /**
@@ -47,8 +47,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'status' => UserStatus::class,
-
+        'type' => UserStatus::class,
     ];
 
     public function orders()
@@ -65,5 +64,4 @@ class User extends Authenticatable
     {
         return $this->morphMany(Media::class, 'mediable');
     }
-
 }

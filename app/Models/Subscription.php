@@ -17,7 +17,7 @@ class Subscription extends Model
         'end_date',
         'stripe_customer_id',
         'stripe_subscription_id',
-        'status',
+        'type',
     ];
 
     public function user()
@@ -26,7 +26,7 @@ class Subscription extends Model
     }
 
     protected $casts = [
-        'status' => SubscriptionStatus::class,
+        'type' => SubscriptionStatus::class,
     ];
 
 }
