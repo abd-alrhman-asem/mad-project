@@ -14,7 +14,7 @@ class Order extends Model
         'user_id',
         'product_id',
         'quantity',
-        'status',
+        'type',
     ];
 
     public function user()
@@ -28,7 +28,6 @@ class Order extends Model
     }
 
     protected $casts = [
-        'status' => OrderStatus::class,
+        'type' => OrderStatus::class,
     ];
-
 }
