@@ -20,3 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('login', LoginController::class);
+
+//helz
+Route::post('resendNotification', [\App\Http\Controllers\Api\V1\Auth\ResendNotificationController::class, 'resendNotification']);
