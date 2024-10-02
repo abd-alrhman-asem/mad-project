@@ -1,30 +1,32 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\Order;
-use App\Models\Product;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class OrderService
 {
-    /**
-     * @throws ValidationException
-     */
+    protected StockService $stockService;
+
+    public function __construct(StockService $stockService)
+    {
+        $this->stockService = $stockService;
+    }
+
     public function createOrder($data)
     {
-        $product = Product::find($data['product_id']);
+        DB::transaction(function () use ($data) {
+            $product = $this->stockService->checkStock($data['product_id'], $data['quantity']);
 
-        if (!$product->hasEnoughQuantity($data['quantity'])) {
-            throw ValidationException::withMessages([
-                'quantity' => 'الكمية المطلوبة غير متاحة.',
-            ]);
-        }
+            $data['user_id'] = auth()->id();
+            $order = Order::create($data);
 
-        $order = Order::create($data);
+            if (!$order) {
+                throw new RuntimeException('Order creation failed');
+            }
 
-//        dd($order);
-        $product->reduceQuantity($data['quantity']);
-        return $order;
+            $this->stockService->reduceStock($product, $data['quantity']);
+        });
     }
 }

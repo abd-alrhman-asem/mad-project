@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
 use App\Services\OrderService;
+use App\Traits\ApiResponseHandlerTrait;
+use Illuminate\Http\JsonResponse;
 
 class OrderController extends Controller
 {
+    use ApiResponseHandlerTrait;
     protected OrderService $orderService;
 
     public function __construct(OrderService $orderService)
@@ -14,14 +17,10 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function store(StoreOrderRequest $request)
+    public function store(StoreOrderRequest $request): JsonResponse
     {
-        $order = $this->orderService->createOrder($request->validated());
-
-        return response()->json([
-            'message' => 'تم إنشاء الطلب بنجاح',
-            'order' => $order,
-        ], 201);
+         $this->orderService->createOrder($request->validated());
+        return $this->successMessage('Order created successfully');
     }
 
 }
