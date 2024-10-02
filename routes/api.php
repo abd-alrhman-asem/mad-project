@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+include __DIR__ . "/orders/orders.php";
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
