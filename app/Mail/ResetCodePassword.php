@@ -53,10 +53,4 @@ class ResetCodePassword extends Mailable
     {
         return [];
     }
-
-    //getter
-    public function getCode()
-    {
-        return $this->code;
-    }
 }

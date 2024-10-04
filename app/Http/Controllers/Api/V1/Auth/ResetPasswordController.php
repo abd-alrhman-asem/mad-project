@@ -9,18 +9,18 @@ use App\Http\Requests\ForgotPasswordRequest;
 
 class ResetPasswordController extends Controller
 {
-    public function forgotPassword(ForgotPasswordRequest $request, ForgotPasswordAction $action)
+    public function forgotPassword(ForgotPasswordRequest $request, ForgotPasswordAction $forgotPasswordAction)
     {
-        $action->execute($request);
+        $forgotPasswordAction->execute($request);
 
         return response()->json([
             'message' => 'Code sent to your email'
         ]);
     }
 
-    public function resetPassword(ResetPasswordRequest $request, ResetPasswordAction $action)
+    public function resetPassword(ResetPasswordRequest $request, ResetPasswordAction $resetPasswordAction)
     {
-        $action->execute($request);
+        $resetPasswordAction->execute($request);
 
         return response()->json([
             'message' => 'Password reset successfully.'

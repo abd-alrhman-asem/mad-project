@@ -1,5 +1,7 @@
 <?php
 
+include __DIR__ . "/resetPassword/reset_password.php";
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ResetPasswordController;
@@ -18,7 +20,3 @@ use App\Http\Controllers\ResetPasswordController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::post('/user/password/email', [ResetPasswordController::class, 'forgotPassword']);
-Route::post('/user/password/reset', [ResetPasswordController::class, 'resetPassword'])
-    ->middleware(['throttle:5,1']);
