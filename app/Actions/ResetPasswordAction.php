@@ -16,7 +16,7 @@ class ResetPasswordAction
             return response()->json(['message' => 'Invalid code'], 400);
         }
 
-        if ($resetCode->created_at > now()->addHour()) {
+        if ($resetCode->created_at > now()->addMinutes(10)) {
             $resetCode->delete();
             return response()->json(['message' => 'Expired code'], 422);
         }
