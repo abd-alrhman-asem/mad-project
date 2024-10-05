@@ -1,7 +1,10 @@
 <?php
 
+include __DIR__ . "/resetPassword/reset_password.php";
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
