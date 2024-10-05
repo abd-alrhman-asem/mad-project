@@ -23,7 +23,11 @@ class ResetPasswordRequest extends FormRequest
     {
         return [
             'code' => 'required|string|exists:reset_code_passwords,code',
-            'password' => 'required|confirmed'
+            'password' => [
+                'required',
+                'confirmed',
+                'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/'
+            ],
         ];
     }
 }
