@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
+use App\Exceptions\InvalidCredentialsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
@@ -15,10 +14,8 @@ class LoginController extends Controller
     {
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'error' => 'The provided credentials are incorrect.',
-            ], 401);
+        if (!Hash::check($request->password, $user->password)) {
+            throw new InvalidCredentialsException();
         }
 
         return response()->json([
