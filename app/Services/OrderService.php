@@ -7,14 +7,11 @@ use RuntimeException;
 
 class OrderService
 {
-    protected StockService $stockService;
 
-    public function __construct(StockService $stockService)
-    {
-        $this->stockService = $stockService;
-    }
+    public function __construct(protected ProductService $stockService)
+    {}
 
-    public function createOrder($data)
+    public function createOrder($data): void
     {
         DB::transaction(function () use ($data) {
             $product = $this->stockService->checkStock($data['product_id'], $data['quantity']);
@@ -26,7 +23,7 @@ class OrderService
                 throw new RuntimeException('Order creation failed');
             }
 
-            $this->stockService->reduceStock($product, $data['quantity']);
+            $product->reduceQuantity($data['quantity']);
         });
     }
 }

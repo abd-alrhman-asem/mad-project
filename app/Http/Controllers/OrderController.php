@@ -10,12 +10,9 @@ use Illuminate\Http\JsonResponse;
 class OrderController extends Controller
 {
     use ApiResponseHandlerTrait;
-    protected OrderService $orderService;
 
-    public function __construct(OrderService $orderService)
-    {
-        $this->orderService = $orderService;
-    }
+    public function __construct(protected OrderService $orderService)
+    {}
 
     public function store(StoreOrderRequest $request): JsonResponse
     {

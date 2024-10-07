@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Product;
 use RuntimeException;
 
-class StockService
+class ProductService
 {
     public function checkStock($productId, $quantity)
     {
@@ -22,9 +22,5 @@ class StockService
         return $product;
     }
 
-    public function reduceStock($product, $quantity)
-    {
-        $product->reduceQuantity($quantity);
-    }
 }
 
