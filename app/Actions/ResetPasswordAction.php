@@ -3,28 +3,29 @@
 namespace App\Actions;
 
 use App\Models\User;
-use App\Models\ResetCodePassword;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 
 class ResetPasswordAction
 {
     public function execute($request)
     {
-        $resetCode = ResetCodePassword::firstWhere('code', $request['code']);
+        $resetEmail = Cache::get('reset_email.' . $request['email']);
+        $resetCode = Cache::get('reset_code.' . $request['email']);
 
-        if (!$resetCode) {
+        if (!$resetCode || $resetCode !== $request['code']) {
             return response()->json(['message' => 'Invalid code'], 400);
         }
 
-        if ($resetCode->created_at > now()->addMinutes(10)) {
-            $resetCode->delete();
-            return response()->json(['message' => 'Expired code'], 422);
+        $user = User::where('email', $resetEmail)->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
         }
 
-        $user = User::where('email', $resetCode->email)->first();
         $user->password = Hash::make($request['password']);
         $user->save();
 
-        $resetCode->delete();
+        Cache::forget('reset_email.' . $request['email']);
+        Cache::forget('reset_code.' . $request['email']);
     }
 }
