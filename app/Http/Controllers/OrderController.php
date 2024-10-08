@@ -8,12 +8,7 @@ use App\Http\Requests\UpdateOrderRequest;
 
 class OrderController extends Controller
 {
-    protected OrderService $orderService;
-
-    public function __construct(OrderService $orderService)
-    {
-        $this->orderService = $orderService;
-    }
+    public function __construct(protected OrderService $orderService){}
 
     public function update(UpdateOrderRequest $request)
     {

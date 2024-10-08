@@ -7,32 +7,37 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use App\Enums\OrderStatus;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
+    public function __construct(protected ProductService $productService){}
+
     public function updateOrder($request)
     {
-        $order = Order::findOrFail($request['order_id']);
-        $old_quantity = $order->quantity;
+        DB::transaction(function () use ($request) {
 
-        if ($order->type == OrderStatus::Pending) {
+            $order = Order::findOrFail($request['order_id']);
             $product = Product::findOrFail($order->product_id);
+            $old_quantity = $order->quantity;
 
-            $product->returnQuantity($old_quantity);
-            $product->save();
+            if ($order->type == OrderStatus::Pending) {
 
-            if (!$product->hasEnoughQuantity($request['quantity'])) {
-                throw new Exception('No enough quantity.');
+                if (!$product->hasEnoughQuantity($request['quantity'])) {
+                    throw new Exception('No enough quantity.');
+                } else {
+                    $order->quantity = $request['quantity'];
+                    $order->save();
+
+                    $this->productService->returnQuantityToProduct($product, $old_quantity);
+                    $this->productService->reduceQuantityfromProduct($product, $request['quantity']);
+                }
             }
-            $order->quantity = $request['quantity'];
-            $order->save();
 
-            $product->reduceQuantity($request['quantity']);
-        }
+            return $order;
+        });
 
-        return $order;
+        throw new Exception("Cannot update order.");
     }
 
     public function deleteOrder($order)
