@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ResetPasswordController;
 
 
-Route::post('/user/password/email', [ResetPasswordController::class, 'forgotPassword']);
-Route::post('/user/password/reset', [ResetPasswordController::class, 'resetPassword'])
-    ->middleware(['throttle:5,1']);
+Route::controller(ResetPasswordController::class)->prefix('user/password')->group(function () {
+    Route::post('/email', 'forgotPassword');
+    Route::post('/reset', 'resetPassword')
+        ->middleware(['throttle:5,1']);
+});
