@@ -14,10 +14,7 @@ class VerifyEmailController extends Controller
     public function verify(VerifyEmailRequest $request)
     {
         $user = User::whereEmail($request->email)->first();
-        if(!$user)
-        {
-            throw new UserNotFoundException();
-        }
+        
 
         $cachedCode=Cache::get("verification_code_{$user->id}");
 
