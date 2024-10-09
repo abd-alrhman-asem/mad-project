@@ -3,6 +3,9 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use App\Models\Subscription as DBSubscription;
+use Illuminate\Console\Scheduling\Schedule;
+use Carbon\Carbon;
 
 class Kernel extends HttpKernel
 {
@@ -21,6 +24,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\CorsMiddleware::class,
     ];
 
     /**
@@ -40,7 +44,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -65,4 +69,18 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
+
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->call(function () {
+            DBSubscription::where('type', 'active')
+                ->where('end_date', '<', Carbon::now())
+                ->update(['type' => 'expired']);
+        })->daily(); // This will run the check every day
+        $schedule->call(function () {
+            DBSubscription::where('type', 'canceled')
+                ->where('end_date', '<', Carbon::now())
+                ->update(['type' => 'expired']); // Mark subscriptions as expired after the end date
+        })->daily(); // Check daily
+    }
 }

@@ -30,5 +30,13 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    /// mad
+    'stripe' => [
+        'allowed_price_ids' => [
+            'price_1Q7If2COLQCvy6cvEkPBlvrk', // 1  month
+            'price_1Q7hVmCOLQCvy6cvBYZnCUkn', //  3 months
+            'price_1Q7hVmCOLQCvy6cvdQZqgVRW', // 1 year
+        ],
+    ],
 
 ];
