@@ -23,13 +23,13 @@ class OrderService
 
             if ($order->type == OrderStatus::Pending) {
 
-                if (!$product->hasEnoughQuantity($request['quantity'])) {
+                if (!$product->hasEnoughQuantity($request['quantity'], $old_quantity)) {
                     throw new Exception('No enough quantity.');
                 } else {
                     $order->quantity = $request['quantity'];
                     $order->save();
 
-                    $this->productService->updateProductQuantity($product, $old_quantity, $request['quantity']);
+                    // $this->productService->updateProductQuantity($product, $old_quantity, $request['quantity']); 
                 }
             } else {
                 throw new Exception('Cannot update order.');

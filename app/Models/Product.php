@@ -34,8 +34,14 @@ class Product extends Model
         'type' => ProductType::class,
     ];
 
-    public function hasEnoughQuantity($quantity)
+    public function hasEnoughQuantity($quantity, $old_quantity = null)
     {
+        if($old_quantity !== null) {
+            $result = $this->quantity + $old_quantity >= $quantity;
+            $this->reduceQuantity($quantity);
+            return $result;
+        }
+
         return $this->quantity >= $quantity;
     }
 
