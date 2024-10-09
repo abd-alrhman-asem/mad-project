@@ -20,6 +20,7 @@ use App\Http\Middleware\CorsMiddleware;
 |
 */
 
+include __DIR__ . "/Password/password.php";
 include __DIR__ . "/orders/orders.php";
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
