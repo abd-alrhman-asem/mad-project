@@ -33,6 +33,11 @@ class Handler extends ExceptionHandler
         if ($exception instanceof InvalidCredentialsException) {
             return $this->makeJsonResponse($exception->getMessage(), 401);
         }
+    
+        if ($exception instanceof UserNotFoundException) {
+            return $this->makeJsonResponse($exception->getMessage(), 404);
+        }
+    
         return parent::render($request, $exception);
     }
 

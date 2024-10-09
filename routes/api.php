@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\v1\HomePageController;
+use App\Http\Controllers\Api\V1\VerifyEmailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,6 @@ Route::post('login', LoginController::class);
 
 
 Route::get('home', [HomePageController::class, 'index']); // no need to define it under a middleware as guests can view homepage (unless guests middleware is added in future)
+
+
+Route::post('/verify-email',[VerifyEmailController::class,'verify']);
