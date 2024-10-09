@@ -4,17 +4,10 @@ namespace App\Services;
 
 class ProductService
 {
-    public function returnQuantityToProduct($product, $quantity)
+    public function updateProductQuantity($product, $quantityToReturn, $quantityToReduce)
     {
-        $product->returnQuantity($quantity);
-        $product->save();
-
-        return $product;
-    }
-
-    public function reduceQuantityfromProduct($product, $quantity)
-    {
-        $product->reduceQuantity($quantity);
+        $product->returnQuantity($quantityToReturn);
+        $product->reduceQuantity($quantityToReduce);
         $product->save();
 
         return $product;

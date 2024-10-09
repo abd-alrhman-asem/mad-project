@@ -29,15 +29,14 @@ class OrderService
                     $order->quantity = $request['quantity'];
                     $order->save();
 
-                    $this->productService->returnQuantityToProduct($product, $old_quantity);
-                    $this->productService->reduceQuantityfromProduct($product, $request['quantity']);
+                    $this->productService->updateProductQuantity($product, $old_quantity, $request['quantity']);
                 }
+            } else {
+                throw new Exception('Cannot update order.');
             }
 
             return $order;
         });
-
-        throw new Exception("Cannot update order.");
     }
 
     public function deleteOrder($order)
