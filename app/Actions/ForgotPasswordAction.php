@@ -2,7 +2,6 @@
 
 namespace App\Actions;
 
-use Illuminate\Support\Facades\Log;
 use App\Services\RandomCodeService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
@@ -16,8 +15,10 @@ class ForgotPasswordAction
     {
         $randomCode = $this->randomCodeService->generate();
 
-        Cache::put('reset_email.' . $request['email'], $request['email'], now()->addMinutes(10));
-        Cache::put('reset_code.' . $request['email'], $randomCode, now()->addMinutes(10));
+        Cache::putMany([
+            'email' => $request['email'],
+            'code' => $randomCode
+        ], now()->addMinutes(10));
 
         Mail::to($request['email'])->send(new ResetPasswordEmail($randomCode));
     }

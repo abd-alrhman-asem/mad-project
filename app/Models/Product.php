@@ -33,4 +33,19 @@ class Product extends Model
     protected $casts = [
         'type' => ProductType::class,
     ];
+
+    public function hasEnoughQuantity($quantity)
+    {
+        return $this->quantity >= $quantity;
+    }
+
+    public function reduceQuantity($quantity)
+    {
+        $this->decrement('quantity', $quantity);
+    }
+
+    public function returnQuantity($quantity)
+    {
+        $this->increment('quantity', $quantity);
+    }
 }
