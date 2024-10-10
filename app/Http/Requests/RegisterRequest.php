@@ -17,13 +17,12 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'full_name'=>['required', 'string', 'min:5'],
-            'phone'=>[ 'string', 'min:8'],
-            'address'=>['string', 'min:2'],
-            'governorate'=>[ 'string', 'min:2'],
-            'type' => ['string', Rule::in(array_column(UserStatus::cases(), 'value'))],
-            'city'=>['string', 'min:2'],
-            'email' => ['required', 'email',],
+            'full_name' => ['required', 'string', 'min:5'],
+            'phone' => ['nullable', 'string', 'min:8', 'regex:/^[0-9]+$/'],
+            'address' => ['nullable', 'string', 'min:2'],
+            'governorate' => ['nullable', 'string', 'min:2'],
+            'city' => ['nullable', 'string', 'min:2'],
+            'email' => ['required', 'email', 'unique:users,email'],
             'password' => [
                 'required',
                 'string',

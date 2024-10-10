@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Services\CodeGenerateServices;
 use App\Models\User;
 use App\Notifications\VerificationCodeNotification;
 use App\Http\Services\UserServices;
@@ -13,55 +14,37 @@ use Illuminate\Support\Facades\Hash;
 class RegisterController extends Controller
 {
     private UserServices $userServices;
-
+    private CodeGenerateServices $codeGenerateServices;
     public function __construct()
     {
         $this->userServices = new UserServices();
+        $this->codeGenerateService = new CodeGenerateServices();
     }
 
 
     public function registerFunction(RegisterRequest $request)
     {
-        $user = User::create([
-            'full_name' => $request->full_name,
-            'phone' => $request->phone,
-            'password' => Hash::make($request->password),
-            'address' => $request->address,
-            'governorate' => $request->governorate,
-            'city' => $request->city,
-            'email' => $request->email,
-            'photo' => $request->photo,
-        ]);
 
-
-        $code = $this->userServices->generateCode();
-        $this->userServices->storeCodeInCache($user->id, $code);
+        $userData = [];
+        $userData['full_name'] = $request->full_name;
+        $userData['phone'] = $request->phone;
+        $userData['password'] = Hash::make($request->password);
+        $userData['address'] = $request->address;
+        $userData['governorate'] = $request->governorate;
+        $userData['city'] = $request->city;
+        $userData['email'] = $request->email;
+        $userData['photo'] = $request->photo;
+        $user = User::create($userData);
+        $code = $this->codeGenerateService->generateCode();
+        $this->codeGenerateService->storeCodeInCache($user->id, $code);
 
         $user->notify(new VerificationCodeNotification($code));
-        $tokenResult = $user->createToken($user); // Name your token 'auth_token'
-
-        // Get the plain-text token value
-        $plainTextToken = $tokenResult->plainTextToken;
+        $plainTextToken = $user->createToken($user)->plainTextToken;
         return response()->json(['token' => $plainTextToken]);
 
 
     }
-    public function logout()
-    {
-        $user = auth()->user();
 
-        if (!$user) {
-            return response()->json([
-                'message' => 'No user is currently logged in.',
-            ], 401);
-        }
-
-        $user->currentAccessToken()->delete();
-
-        return response()->json([
-            'message' => 'Logged out successfully.'
-        ], 200);
-    }
 
 
 
