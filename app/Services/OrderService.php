@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use RuntimeException;
 use Exception;
 use App\Models\User;
 use App\Models\Order;
@@ -72,5 +73,23 @@ class OrderService
             $product->save();
             $order->delete();
         }
+      
+      
+    public function createOrder($data): void
+    {
+        DB::transaction(function () use ($data) {
+            $product = $this->productService->checkStock($data['product_id'], $data['quantity']);
+
+            $data['user_id'] = auth()->id();
+            $order = Order::create($data);
+
+            if (!$order) {
+                throw new RuntimeException('Order creation failed');
+            }
+
+            $product->reduceQuantity($data['quantity']);
+        });
     }
+    }
+
 }
