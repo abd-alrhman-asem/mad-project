@@ -1,5 +1,9 @@
 <?php
 
+
+
+
+
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\v1\HomePageController;
 use App\Http\Controllers\Api\V1\VerifyEmailController;
@@ -22,7 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+include __DIR__ . "/orders/orders.php";
 
 
 
