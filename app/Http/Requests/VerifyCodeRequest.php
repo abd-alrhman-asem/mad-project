@@ -11,7 +11,7 @@ class VerifyCodeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,6 +22,7 @@ class VerifyCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'email' => 'required|email|exists:users,email',
             'code' => 'required|string'
         ];
     }

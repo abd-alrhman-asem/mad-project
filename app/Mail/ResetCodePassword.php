@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -40,7 +39,9 @@ class ResetCodePassword extends Mailable
     {
         return new Content(
             view: 'reset-code-password',
-            with: [$this->code]
+            with: [
+                'code' => $this->code
+            ]
         );
     }
 

@@ -9,8 +9,9 @@
 </head>
 
 <body>
-    <h1>{{ $code }}</h1>
-    <p>Reset Code Sent Successfully to your email...</p>
+    <p>Your Reset Code: </p>
+    <h1 style="letter-spacing: 10px">{{ $code }}</h1>
+    <p>Valid for 10 minutes</p>
 </body>
 
 </html>
