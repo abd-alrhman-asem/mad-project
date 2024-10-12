@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->morphMany(Media::class, 'mediable');
     }
+
+    public function pendingOrders()
+    {
+        return $this->orders->where('type', OrderStatus::Pending);
+    }
 }

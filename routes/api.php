@@ -1,6 +1,12 @@
 <?php
 
+
+
+
+
 use App\Http\Controllers\Api\V1\Auth\LoginController;
+use App\Http\Controllers\Api\v1\HomePageController;
+use App\Http\Controllers\Api\V1\VerifyEmailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+include __DIR__ . "/orders/orders.php";
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -34,11 +41,8 @@ Route::post('resendNotification', [\App\Http\Controllers\Api\V1\Auth\ResendVerif
     ->middleware('throttle:2,5');
 
 
+Route::get('home', [HomePageController::class, 'index']); // no need to define it under a middleware as guests can view homepage (unless guests middleware is added in future)
 
 
-
-
-
-
-
+Route::post('/verify-email',[VerifyEmailController::class,'verify']);
 
