@@ -23,9 +23,9 @@ class RegisterController extends Controller
 
     public function registerFunction(RegisterRequest $request)
     {
-        // تحقق من صحة البيانات المدخلة
+
         $userData = $request->validated();
-        $userData['password'] = Hash::make($userData['password']); // تشفير كلمة المرور
+        $userData['password'] = Hash::make($userData['password']);
         $user = User::create($userData);
         if ($request->hasFile('photo')) {
             try {
