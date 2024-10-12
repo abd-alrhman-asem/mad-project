@@ -2,25 +2,31 @@
 
 namespace App\Console;
 
+use App\Console\Commands\TrialOrExpirdCommand;
+use App\Http\Services\UserServices;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
+
+   protected $commands=[TrialOrExpirdCommand::class];
+
+
     /**
      * Define the application's command schedule.
      */
-    protected function schedule(Schedule $schedule): void
+    protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('user:trial')->daily();
     }
 
     /**
      * Register the commands for the application.
      */
-    protected function commands(): void
+    protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
