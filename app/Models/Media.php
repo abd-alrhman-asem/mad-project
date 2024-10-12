@@ -12,6 +12,8 @@ class Media extends Model
     protected $fillable = [
         'file_path',
         'file_type',
+        'mediable_id',
+        'mediable_type',
     ];
 
     public function mediable()

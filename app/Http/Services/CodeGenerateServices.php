@@ -21,15 +21,16 @@ class CodeGenerateServices
         return $verificationCode;
     }
 
-    public function storeCodeInCache($userId, $code)
-    {Cache::put("verification_code_{$userId}", $code, 10 * 60);}
-
-    public function verifyCode($userId, $inputCode)
+    public function storeCodeInCache($email, $code)
     {
-        $cachedCode = Cache::get("verification_code_{$userId}");
-        return $cachedCode && $cachedCode === $inputCode;
+        Cache::put("verification_code_{$email}", $code, 10 * 60);
     }
 
+    public function verifyCode($email, $inputCode)
+    {
+        $cachedCode = Cache::get("verification_code_{$email}");
+        return $cachedCode && $cachedCode === $inputCode;
+    }
 
 
 

@@ -33,7 +33,7 @@ class RegisterRequest extends FormRequest
                 'regex:/[@$!%*?&]/',
             ],
 
-            'photo' => ['image'],
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ];
     }
 

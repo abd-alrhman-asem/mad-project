@@ -8,51 +8,56 @@ use App\Models\User;
 use App\Notifications\VerificationCodeNotification;
 use App\Http\Services\UserServices;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Media;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+
 class RegisterController extends Controller
 {
-    private UserServices $userServices;
-    private CodeGenerateServices $codeGenerateServices;
-    public function __construct()
-    {
-        $this->userServices = new UserServices();
-        $this->codeGenerateService = new CodeGenerateServices();
-    }
-
+    public function __construct(
+        protected UserServices $userServices,
+        protected CodeGenerateServices $codeGenerateServices
+    ) {}
 
     public function registerFunction(RegisterRequest $request)
     {
-
-        $userData = [];
-        $userData['full_name'] = $request->full_name;
-        $userData['phone'] = $request->phone;
-        $userData['password'] = Hash::make($request->password);
-        $userData['address'] = $request->address;
-        $userData['governorate'] = $request->governorate;
-        $userData['city'] = $request->city;
-        $userData['email'] = $request->email;
-        $userData['photo'] = $request->photo;
+        // تحقق من صحة البيانات المدخلة
+        $userData = $request->validated();
+        $userData['password'] = Hash::make($userData['password']); // تشفير كلمة المرور
         $user = User::create($userData);
-        $code = $this->codeGenerateService->generateCode();
-        $this->codeGenerateService->storeCodeInCache($user->id, $code);
+        if ($request->hasFile('photo')) {
+            try {
 
+                $photoPath = $request->file('photo')->store('photos', 'public');
+                $media = Media::create([
+                    'mediable_id' => $user->id,
+                    'mediable_type' => User::class,
+                    'file_path' => $photoPath,
+                    'file_type' => $request->file('photo')->getClientMimeType(),
+                ]);
+
+                if (!$media) {
+                    $user->delete();
+                    throw new \Exception('Media record was not created.');
+                }
+            } catch (\Exception $e) {
+                $user->delete();
+                return response()->json(['error' => 'Failed to store photo: ' . $e->getMessage()], 500);
+            }
+        }
+
+        $code = $this->codeGenerateServices->generateCode();
+        $this->codeGenerateServices->storeCodeInCache($user->email, $code);
         $user->notify(new VerificationCodeNotification($code));
-        $plainTextToken = $user->createToken($user)->plainTextToken;
-        return response()->json(['token' => $plainTextToken]);
-
-
+        $plainTextToken = $user->createToken('authToken')->plainTextToken;
+        return response()->json([
+            'message' => 'Registration successful',
+            'token' => $plainTextToken,
+            'user' => $user,
+        ], 201);
     }
-
-
-
-
-
-
-
-
-
 
 
 

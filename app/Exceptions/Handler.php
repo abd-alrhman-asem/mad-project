@@ -42,8 +42,9 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Unauthenticated'], 401);
         }
 
+        // Customize the ThrottleRequestsException message here
         if ($exception instanceof ThrottleRequestsException) {
-            return response()->json(['error' => 'Too many requests'], 429);
+            return response()->json(['error' => 'You can only resend the code twice within 5 minutes.'], 429);
         }
 
         if ($exception instanceof AuthorizationException) {
@@ -63,6 +64,7 @@ class Handler extends ExceptionHandler
 
         return response()->json(['error' => 'Server error'], 500);
     }
+
 
     public function render($request, Throwable $exception)
     {
