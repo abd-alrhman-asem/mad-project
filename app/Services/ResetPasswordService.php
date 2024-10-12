@@ -18,7 +18,8 @@ class ResetPasswordService
     {
         $randomCode = $this->randomCodeService->generate();
 
-        Cache::put($request['email'], $randomCode, now()->addMinutes(10));
+        Cache::put('reset_email-' . $request['email'], $request['email'], now()->addMinutes(10));
+        Cache::put('reset_code-' . $request['email'], $randomCode, now()->addMinutes(10));
 
         Mail::to($request['email'])->send(new ResetCodePassword($randomCode));
     }
@@ -26,7 +27,8 @@ class ResetPasswordService
     //verify code
     public function verifyCode($request)
     {
-        $resetCode = Cache::get($request['email']);
+        $resetCode = Cache::get('reset_email-' . $request['email']);
+        $resetCode = Cache::get('reset_code-' . $request['email']);
 
         if (!$resetCode || $resetCode !== $request['code']) {
             return response()->json(['message' => 'Invalid code'], 400);
