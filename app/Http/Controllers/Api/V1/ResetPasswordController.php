@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ResetPasswordRequest;
@@ -15,7 +15,7 @@ class ResetPasswordController extends Controller
 
     public function forgotPassword(ForgotPasswordRequest $request)
     {
-        $this->resetPasswordService->generateRandomCode($request->validated());
+        $this->resetPasswordService->sendGeneratedCodeToEmail($request->validated());
 
         return response()->json([
             'message' => 'Code sent to your email'
@@ -25,10 +25,6 @@ class ResetPasswordController extends Controller
     public function verifyCode(VerifyCodeRequest $request)
     {
         $token = $this->resetPasswordService->verifyCode($request->validated());
-
-        if (!$token) {
-            throw new Exception('Inavalid code');
-        }
 
         return response()->json([
             'token' => $token
