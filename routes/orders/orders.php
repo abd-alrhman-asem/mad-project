@@ -1,5 +1,6 @@
 <?php
 
+
 namespace app\routes\orders;
 
 use Illuminate\Support\Facades\Route;
@@ -14,7 +15,10 @@ Route::middleware('auth:sanctum')->controller(OrderController::class)->prefix('o
     ->name('create_orders');
 });
 
+
 Route::get('/create-token',function (){
     $user = User::find(1);
     return $user->createToken('token')->plainTextToken;
+
 });
+

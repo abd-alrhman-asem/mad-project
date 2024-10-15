@@ -33,6 +33,9 @@ class Product extends Model
         return $this->morphMany(Media::class, 'mediable');
     }
 
+
+
+
     public function hasEnoughQuantity($quantity, $old_quantity = null)
     {
         if($old_quantity !== null) {
@@ -40,15 +43,24 @@ class Product extends Model
             $this->reduceQuantity($quantity);
             return $result;
 
+
     public function hasEnoughQuantity($quantity)
     {
         if ($this->countable) {
             return $this->quantity >= $quantity;
 
+//         }
+
+//         return $this->quantity >= $quantity;
+//     }
+
+
+
         }
       
         return $this->quantity >= $quantity;
     }
+
 
     public function reduceQuantity($quantity)
     {

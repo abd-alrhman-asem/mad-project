@@ -4,6 +4,7 @@
 namespace App\Exceptions;
 
 
+
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -13,46 +14,46 @@ use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    protected $dontFlash = [
-        'current_password',
-        'password',
-        'password_confirmation',
-    ];
+//     protected $dontFlash = [
+//         'current_password',
+//         'password',
+//         'password_confirmation',
+//     ];
 
-    public function register(): void
-    {
-        $this->reportable(function (Throwable $e) {
-        });
-    } 
+//     public function register(): void
+//     {
+//         $this->reportable(function (Throwable $e) {
+//         });
+//     } 
 
-    public function render($request, Throwable $exception)
-    {
-        if ($exception instanceof InvalidCredentialsException) {
-            return $this->makeJsonResponse($exception->getMessage(), 401);
-        }
+//     public function render($request, Throwable $exception)
+//     {
+//         if ($exception instanceof InvalidCredentialsException) {
+//             return $this->makeJsonResponse($exception->getMessage(), 401);
+//         }
+
     
-        if ($exception instanceof UserNotFoundException) {
-            return $this->makeJsonResponse($exception->getMessage(), 404);
-        }
+//         if ($exception instanceof UserNotFoundException) {
+//             return $this->makeJsonResponse($exception->getMessage(), 404);
+//         }
     
-        return parent::render($request, $exception);
-    }
 
-    protected function makeJsonResponse($message, $statusCode)
-    {
-        $response = [
-            'success' => false,
-            'message' => $message,
-        ];
+//         return parent::render($request, $exception);
+//     }
 
-        return new JsonResponse($response, $statusCode);
-    }
+//     protected function makeJsonResponse($message, $statusCode)
+//     {
+//         $response = [
+//             'success' => false,
+//             'message' => $message,
+//         ];
+
+//         return new JsonResponse($response, $statusCode);
+//     }
 
     protected function HandleException(Throwable $exception): JsonResponse
     {
@@ -95,6 +96,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         return $this->HandleException($exception);
+
     }
 }
 

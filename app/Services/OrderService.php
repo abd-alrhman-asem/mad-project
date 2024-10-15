@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
 use RuntimeException;
 use Exception;
 use App\Models\User;
@@ -12,7 +14,72 @@ use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
-    public function __construct(protected ProductService $productService){}
+    public function __construct(protected ProductService $productService)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+    }
+
+
+    public function createOrder(array $data): Order
+    {
+        return DB::transaction(function () use ($data) {
+            // Check if the product is in stock
+            $product = $this->productService->checkStock($data['product_id'], $data['quantity']);
+
+            $data['user_id'] = auth()->id();
+            $order = Order::create($data);
+
+            if (!$order) {
+                throw new RuntimeException('Order creation failed');
+            }
+
+            $product->reduceQuantity($data['quantity']);
+            return $order; // Return the created order
+        });
+    }
+
+    public function createPaymentIntent(array $data, int $orderId): array
+    {
+        return DB::transaction(function () use ($data, $orderId) {
+            // Check if the product is in stock
+            $product = $this->productService->checkStock($data['product_id'], $data['quantity']);
+            //create payment intent to return client secret to the frontend to complete the payment
+            $paymentIntent = PaymentIntent::create([
+                'amount' => $product->price * $data['quantity'] * 100, // price * quantity * 100 to convert to cents
+                'currency' => 'usd',
+                'description' => 'Order Payment',
+                'metadata' => [
+                    'order_id' => $orderId, // add order id to the metadata
+                    'email' => auth()->user()->email, // add email to the metadata
+                ],
+                'automatic_payment_methods' => ['enabled' => true],
+            ]);
+
+            // return the client secret and payment intent ID
+            return [
+                'client_secret' => $paymentIntent->client_secret,
+                'stripe_payment_intent_id' => $paymentIntent->id,
+            ];
+        });
+    }
+
+//     public function createOrder($data): void
+//     {
+//         DB::transaction(function () use ($data) {
+//             $product = $this->productService->checkStock($data['product_id'], $data['quantity']);
+
+//             $data['user_id'] = auth()->id();
+//             $order = Order::create($data);
+
+//             if (!$order) {
+//                 throw new RuntimeException('Order creation failed');
+//             }
+
+//             $product->reduceQuantity($data['quantity']);
+//         });
+//     }
+
+
 
     public function updateOrder($request)
     {
@@ -73,23 +140,6 @@ class OrderService
             $product->save();
             $order->delete();
         }
-      
-      
-    public function createOrder($data): void
-    {
-        DB::transaction(function () use ($data) {
-            $product = $this->productService->checkStock($data['product_id'], $data['quantity']);
-
-            $data['user_id'] = auth()->id();
-            $order = Order::create($data);
-
-            if (!$order) {
-                throw new RuntimeException('Order creation failed');
-            }
-
-            $product->reduceQuantity($data['quantity']);
-        });
     }
-    }
-
+                             
 }
