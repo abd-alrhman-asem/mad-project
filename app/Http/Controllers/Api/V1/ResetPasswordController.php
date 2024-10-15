@@ -15,7 +15,7 @@ class ResetPasswordController extends Controller
 
     public function forgotPassword(ForgotPasswordRequest $request)
     {
-        $this->resetPasswordService->sendGeneratedCodeToEmail($request->validated());
+        $this->resetPasswordService->sendCodeToEmail($request->validated());
 
         return response()->json([
             'message' => 'Code sent to your email'

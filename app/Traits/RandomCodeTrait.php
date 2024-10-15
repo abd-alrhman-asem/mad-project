@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Traits;
 
-class RandomCodeService
+trait RandomCodeTrait
 {
-    public function generate()
+    public function generateRandomCode()
     {
         $lowerCase = 'abcdefghijklmnopqrstuvwxyz';
         $upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';

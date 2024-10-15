@@ -4,26 +4,24 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Mail\ResetCodePassword;
-use App\Services\RandomCodeService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
+use App\Traits\RandomCodeTrait;
 
 class ResetPasswordService
 {
-    public function __construct(protected RandomCodeService $randomCodeService) {}
+    use RandomCodeTrait;
 
-    //forgot password
-    public function sendGeneratedCodeToEmail($request)
+    public function sendCodeToEmail($request)
     {
-        $randomCode = $this->randomCodeService->generate();
+        $randomCode = $this->generateRandomCode();
 
         Cache::put('reset_code.' . $request['email'], $randomCode, now()->addMinutes(10));
 
         Mail::to($request['email'])->send(new ResetCodePassword($randomCode));
     }
 
-    //verify code
     public function verifyCode($request)
     {
         $resetCode = Cache::get('reset_code.' . $request['email']);
@@ -40,7 +38,6 @@ class ResetPasswordService
         return $token;
     }
 
-    //reset password
     public function resetPassword($request)
     {
         $user = auth()->user();
