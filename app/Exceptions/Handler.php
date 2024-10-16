@@ -1,30 +1,102 @@
 <?php
 
+
 namespace App\Exceptions;
 
+
+
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * The list of the inputs that are never flashed to the session on validation exceptions.
-     *
-     * @var array<int, string>
-     */
-    protected $dontFlash = [
-        'current_password',
-        'password',
-        'password_confirmation',
-    ];
+//     protected $dontFlash = [
+//         'current_password',
+//         'password',
+//         'password_confirmation',
+//     ];
 
-    /**
-     * Register the exception handling callbacks for the application.
-     */
-    public function register(): void
+//     public function register(): void
+//     {
+//         $this->reportable(function (Throwable $e) {
+//         });
+//     } 
+
+//     public function render($request, Throwable $exception)
+//     {
+//         if ($exception instanceof InvalidCredentialsException) {
+//             return $this->makeJsonResponse($exception->getMessage(), 401);
+//         }
+
+    
+//         if ($exception instanceof UserNotFoundException) {
+//             return $this->makeJsonResponse($exception->getMessage(), 404);
+//         }
+    
+
+//         return parent::render($request, $exception);
+//     }
+
+//     protected function makeJsonResponse($message, $statusCode)
+//     {
+//         $response = [
+//             'success' => false,
+//             'message' => $message,
+//         ];
+
+//         return new JsonResponse($response, $statusCode);
+//     }
+
+    protected function HandleException(Throwable $exception): JsonResponse
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->json(['error' => 'Resource not found'], 404);
+        }
+
+        if ($exception instanceof NotFoundHttpException) {
+            return response()->json(['error' => 'Resource not found'], 404);
+        }
+
+        if ($exception instanceof AuthenticationException) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
+        // Customize the ThrottleRequestsException message here
+        if ($exception instanceof ThrottleRequestsException) {
+            return response()->json(['error' => 'You can only resend the code twice within 5 minutes.'], 429);
+        }
+
+        if ($exception instanceof AuthorizationException) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
+        if ($exception instanceof QueryException) {
+            return response()->json(['error' => 'Database error'], 500);
+        }
+
+        if ($exception instanceof ValidationException) {
+            return response()->json([
+                'error' => 'Validation error',
+                'messages' => $exception->errors(),
+            ], 422);
+        }
+
+        return response()->json(['error' => 'Server error'], 500);
+    }
+
+
+    public function render($request, Throwable $exception)
+    {
+        return $this->HandleException($exception);
+
     }
 }
+
