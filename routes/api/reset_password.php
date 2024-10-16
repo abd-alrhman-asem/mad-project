@@ -2,8 +2,8 @@
 
 namespace app\routes\resetPassword;
 
+use App\Http\Controllers\Api\V1\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\ResetPasswordController;
 
 
 Route::controller(ResetPasswordController::class)->prefix('user/password')->group(function () {

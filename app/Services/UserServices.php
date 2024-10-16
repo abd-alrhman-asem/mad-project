@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Services;
 
 use App\Enums\UserStatus;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class UserServices
 {
@@ -16,9 +14,7 @@ class UserServices
         $uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $numbers = '0123456789';
         $characters = $lowercaseLetters . $uppercaseLetters . $numbers;
-        $verificationCode = substr(str_shuffle($characters), 0, 6);
-
-        return $verificationCode;
+        return substr(str_shuffle($characters), 0, 6);
     }
 
     public function storeCodeInCache($userId, $code)

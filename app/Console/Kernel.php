@@ -3,7 +3,6 @@
 namespace App\Console;
 
 use App\Console\Commands\TrialOrExpirdCommand;
-use App\Http\Services\UserServices;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 

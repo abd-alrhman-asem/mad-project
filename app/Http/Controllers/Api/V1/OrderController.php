@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use App\Services\OrderService;
-use App\Http\Requests\UpdateOrderRequest;
-use App\Http\Requests\StoreOrderRequest;
 use App\Traits\ApiResponseHandlerTrait;
-use Illuminate\Http\JsonResponse;
 
 
 class OrderController extends Controller
@@ -40,7 +39,7 @@ class OrderController extends Controller
             'stripe_payment_intent_id' => $paymentIntentData['stripe_payment_intent_id'],
         ], 'Order created successfully');
     }
-}
+
 
 
     public function update(UpdateOrderRequest $request)
@@ -48,7 +47,7 @@ class OrderController extends Controller
         $order = $this->orderService->updateOrder($request->validated());
 
         return response()->json([
-            'messaage' => 'order updated successfully',
+            'message' => 'order updated successfully',
             'updated order' => $order
         ]);
     }
@@ -78,3 +77,4 @@ class OrderController extends Controller
 //         return $this->successMessage('Order created successfully');
 //     }
 }
+

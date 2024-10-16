@@ -18,42 +18,6 @@ use Throwable;
 
 class Handler extends ExceptionHandler
 {
-//     protected $dontFlash = [
-//         'current_password',
-//         'password',
-//         'password_confirmation',
-//     ];
-
-//     public function register(): void
-//     {
-//         $this->reportable(function (Throwable $e) {
-//         });
-//     } 
-
-//     public function render($request, Throwable $exception)
-//     {
-//         if ($exception instanceof InvalidCredentialsException) {
-//             return $this->makeJsonResponse($exception->getMessage(), 401);
-//         }
-
-    
-//         if ($exception instanceof UserNotFoundException) {
-//             return $this->makeJsonResponse($exception->getMessage(), 404);
-//         }
-    
-
-//         return parent::render($request, $exception);
-//     }
-
-//     protected function makeJsonResponse($message, $statusCode)
-//     {
-//         $response = [
-//             'success' => false,
-//             'message' => $message,
-//         ];
-
-//         return new JsonResponse($response, $statusCode);
-//     }
 
     protected function HandleException(Throwable $exception): JsonResponse
     {

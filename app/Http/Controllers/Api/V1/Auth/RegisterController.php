@@ -3,15 +3,11 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
-use App\Http\Services\CodeGenerateServices;
+use App\Models\Media;
 use App\Models\User;
 use App\Notifications\VerificationCodeNotification;
-use App\Http\Services\UserServices;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Media;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
+use App\Services\CodeGenerateServices;
+use App\Services\UserServices;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller

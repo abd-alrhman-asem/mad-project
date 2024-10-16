@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Stripe\Webhook;
 use Illuminate\Support\Facades\Log;
-use Stripe\Exception\SignatureVerificationException;
 use App\Models\Subscription;
 use App\Models\Order;
 use Stripe\Stripe;

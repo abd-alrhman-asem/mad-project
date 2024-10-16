@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Services;
 
-use App\Enums\UserStatus;
-use App\Models\User;
+
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
+
 
 class CodeGenerateServices
 {

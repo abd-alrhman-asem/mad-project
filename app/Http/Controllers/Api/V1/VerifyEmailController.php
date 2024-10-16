@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Exceptions\InvalidCredentialsException;
-use App\Exceptions\UserNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VerifyEmailRequest;
 use App\Models\User;
@@ -14,7 +13,7 @@ class VerifyEmailController extends Controller
     public function verify(VerifyEmailRequest $request)
     {
         $user = User::whereEmail($request->email)->first();
-        
+
 
         $cachedCode=Cache::get("verification_code_{$user->id}");
 

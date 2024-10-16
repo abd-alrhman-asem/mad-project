@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 use App\Http\Controllers\Controller;
-use App\Http\Services\CodeGenerateServices;
 use App\Http\Requests\ResendNotificationRequest;
 use App\Models\User;
 use App\Notifications\VerificationCodeNotification;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
+use App\Services\CodeGenerateServices;
+
 
 class ResendVerificationCodeController extends Controller
 {
