@@ -36,6 +36,15 @@ class Product extends Model
 
 
 
+//     public function hasEnoughQuantity($quantity)
+//     {
+//         return $this->quantity >= $quantity;
+//     }
+
+
+
+
+
     public function hasEnoughQuantity($quantity, $old_quantity = null)
     {
         if($old_quantity !== null) {

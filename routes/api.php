@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\v1\HomePageController;
 use App\Http\Controllers\Api\V1\VerifyEmailController;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\OnlinePayment\SubscriptionController;
 use App\Http\Controllers\Api\V1\OnlinePayment\UnSubscribeController;
 use App\Http\Middleware\CorsMiddleware;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +24,9 @@ use App\Http\Middleware\CorsMiddleware;
 |
 */
 
+include __DIR__ . "/resetPassword/reset_password.php";
 include __DIR__ . "/orders/orders.php";
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
