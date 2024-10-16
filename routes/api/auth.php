@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterController::class, 'registerFunction']);
 Route::post('/login', LoginController::class);
-Route::post('/logout', [LogoutController::class, 'logout'])->middleware('auth:sanctum');
+Route::get('/logout', [LogoutController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/verify-email',[VerifyEmailController::class,'verify']);
-Route::post('/resendNotification', [ResendVerificationCodeController::class, 'resendNotification'])
+Route::post('/resend-verification-code', [ResendVerificationCodeController::class, 'resendVerificationCode'])
     ->middleware('throttle:2,5');

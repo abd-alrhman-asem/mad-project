@@ -16,7 +16,7 @@ class ResendVerificationCodeController extends Controller
     {
 
     }
-    public function resendNotification(ResendNotificationRequest $request)
+    public function resendVerificationCode(ResendNotificationRequest $request)
     {
         $user = User::where('email', $request->email)->first();
         $code = $this->codeGenerateServices->generateCode();

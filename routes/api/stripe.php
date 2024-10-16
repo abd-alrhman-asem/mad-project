@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');
-    Route::post('/unsubscribe', UnSubscribeController::class)->name('unsubscribe');
+    Route::get('/unsubscribe', UnSubscribeController::class)->name('unsubscribe');
 });
 
 Route::post('/stripe/webhook', [WebhookController::class, 'handleWebhook'])->name('stripe.webhook');

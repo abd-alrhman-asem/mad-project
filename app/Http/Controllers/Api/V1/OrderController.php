@@ -22,16 +22,13 @@ class OrderController extends Controller
     {
         //create the order
         $order = $this->orderService->createOrder($request->validated());
-
         //create the payment intent with the order id and data
         $paymentIntentData = $this->orderService->createPaymentIntent([
             'product_id' => $request->input('product_id'),
             'quantity' => $request->input('quantity'),
         ], $order->id);
-
         $order->stripe_payment_intent_id = $paymentIntentData['stripe_payment_intent_id'];
         $order->save(); // save the stripe_payment_intent_id to the order table
-
         // return the order id and client secret to the frontend
         return $this->successResponse([
             'order_id' => $order->id,
@@ -71,10 +68,5 @@ class OrderController extends Controller
         ]);
     }
 
-//     public function store(StoreOrderRequest $request): JsonResponse
-//     {
-//          $this->orderService->createOrder($request->validated());
-//         return $this->successMessage('Order created successfully');
-//     }
 }
 

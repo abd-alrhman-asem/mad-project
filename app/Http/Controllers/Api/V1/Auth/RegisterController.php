@@ -47,14 +47,8 @@ class RegisterController extends Controller
         $code = $this->codeGenerateServices->generateCode();
         $this->codeGenerateServices->storeCodeInCache($user->email, $code);
         $user->notify(new VerificationCodeNotification($code));
-        $plainTextToken = $user->createToken('authToken')->plainTextToken;
         return response()->json([
-            'message' => 'Registration successful',
-            'token' => $plainTextToken,
-            'user' => $user,
-        ], 201);
+            'message' => 'we send code for your email',
+        ]);
     }
-
-
-
 }

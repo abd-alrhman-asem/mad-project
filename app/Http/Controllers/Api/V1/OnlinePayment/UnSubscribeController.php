@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1\OnlinePayment;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Services\SubscriptionService;
 
 class UnSubscribeController extends Controller
@@ -17,7 +16,7 @@ class UnSubscribeController extends Controller
     {
         $this->subscriptionService = $subscriptionService;
     }
-    public function __invoke(Request $request)
+    public function __invoke()
     {
         //
         $result = $this->subscriptionService->unsubscribe(auth()->id());
