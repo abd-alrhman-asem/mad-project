@@ -5,6 +5,7 @@ namespace App\Exceptions;
 
 
 
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -13,6 +14,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -51,6 +53,14 @@ class Handler extends ExceptionHandler
                 'error' => 'Validation error',
                 'messages' => $exception->errors(),
             ], 422);
+        }
+
+        if ($exception instanceof Exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+
+        if ($exception instanceof RuntimeException) {
+            return response()->json(['error' => $exception->getMessage()], 500);
         }
 
         return response()->json(['error' => 'Server error'], 500);

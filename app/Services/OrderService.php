@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Auth;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use RuntimeException;
 use Exception;
-use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use App\Enums\OrderStatus;
@@ -81,9 +81,10 @@ class OrderService
 
 
 
-    public function updateOrder($request)
+    public function updateOrder($request , )
     {
-        DB::transaction(function () use ($request) {
+        $order  = null;
+        DB::transaction(function () use ($request , &$order) {
 
             $order = Order::findOrFail($request['order_id']);
             $product = Product::findOrFail($order->product_id);
@@ -93,18 +94,18 @@ class OrderService
 
                 if (!$product->hasEnoughQuantity($request['quantity'], $old_quantity)) {
                     throw new Exception('No enough quantity.');
-                } else {
-                    $order->quantity = $request['quantity'];
-                    $order->save();
-
-                    // $this->productService->updateProductQuantity($product, $old_quantity, $request['quantity']); 
                 }
+
+                $order->quantity = $request['quantity'];
+                $order->save();
+
+                // $this->productService->updateProductQuantity($product, $old_quantity, $request['quantity']);
             } else {
                 throw new Exception('Cannot update order.');
             }
 
-            return $order;
         });
+        return $order;
     }
 
     public function deleteOrder($order)
@@ -126,8 +127,7 @@ class OrderService
 
     public function clearCart()
     {
-        // $user = Auth::user();
-        $user = User::first();
+         $user = Auth::user();
         $pendingOrders = $user->pendingOrders();
 
         if ($pendingOrders->isEmpty()) {
@@ -141,5 +141,5 @@ class OrderService
             $order->delete();
         }
     }
-                             
+
 }
