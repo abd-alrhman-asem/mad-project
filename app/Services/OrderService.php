@@ -81,14 +81,20 @@ class OrderService
 
 
 
+
     public function updateOrder($request , )
     {
+
         $order  = null;
         DB::transaction(function () use ($request , &$order) {
 
             $order = Order::findOrFail($request['order_id']);
             $product = Product::findOrFail($order->product_id);
             $old_quantity = $order->quantity;
+
+            if(!$this->verifyOrderOwner($order)){
+                throw new Exception('Not allowed to update order.');
+            }
 
             if ($order->type == OrderStatus::Pending) {
 
@@ -114,6 +120,10 @@ class OrderService
             throw new Exception('Order not found.');
         }
 
+        if(!$this->verifyOrderOwner($order)){
+            throw new Exception('Not allowed to delete order.');
+        }
+
         $product = Product::findOrfail($order->product_id);
 
         if ($order->type = OrderStatus::Pending) {
@@ -128,6 +138,7 @@ class OrderService
     public function clearCart()
     {
          $user = Auth::user();
+
         $pendingOrders = $user->pendingOrders();
 
         if ($pendingOrders->isEmpty()) {
@@ -142,4 +153,11 @@ class OrderService
         }
     }
 
+    public function verifyOrderOwner($order)
+    {
+        return $order->user_id == Auth::id();
+
+    }
+
 }
+
