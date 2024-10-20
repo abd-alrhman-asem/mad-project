@@ -7,6 +7,7 @@ use RuntimeException;
 
 class ProductService
 {
+
     public function updateProductQuantity($product, $quantityToReturn, $quantityToReduce)
     {
         $product->returnQuantity($quantityToReturn);
@@ -15,7 +16,7 @@ class ProductService
 
         return $product;
     }
-  
+
     public function checkStock($productId, $quantity)
     {
         $product = Product::find($productId);
@@ -30,4 +31,6 @@ class ProductService
 
         return $product;
     }
+
 }
+

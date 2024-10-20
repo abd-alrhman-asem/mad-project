@@ -81,8 +81,10 @@ class OrderService
 
 
 
-    public function updateOrder($request)
+
+    public function updateOrder($request , )
     {
+
         $order  = null;
         DB::transaction(function () use ($request , &$order) {
 
@@ -135,7 +137,8 @@ class OrderService
 
     public function clearCart()
     {
-        $user = Auth::user();
+         $user = Auth::user();
+
         $pendingOrders = $user->pendingOrders();
 
         if ($pendingOrders->isEmpty()) {
@@ -153,6 +156,7 @@ class OrderService
     public function verifyOrderOwner($order)
     {
         return $order->user_id == Auth::id();
+
     }
 
 }

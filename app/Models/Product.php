@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-  
+
     protected $casts = [
         'type' => ProductType::class,
     ];
@@ -33,22 +33,18 @@ class Product extends Model
         return $this->morphMany(Media::class, 'mediable');
     }
 
+
     public function hasEnoughQuantity($quantity, $old_quantity = null)
     {
-        if($old_quantity !== null) {
+        if ($old_quantity !== null) {
             $result = $this->quantity + $old_quantity >= $quantity;
             $this->reduceQuantity($quantity);
             return $result;
-
-    public function hasEnoughQuantity($quantity)
-    {
-        if ($this->countable) {
-            return $this->quantity >= $quantity;
-
         }
-      
         return $this->quantity >= $quantity;
+
     }
+
 
     public function reduceQuantity($quantity)
     {

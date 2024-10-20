@@ -19,9 +19,9 @@ return new class extends Migration
             $table->date('end_date');
             $table->string('stripe_customer_id')->nullable();
             $table->string('stripe_subscription_id')->nullable();
-            $table->enum('type', allowed: array_column(SubscriptionStatus::cases(), 'value'))->default(value: SubscriptionStatus::Paid->value);
+            $table->enum('type', allowed: array_column(SubscriptionStatus::cases(), 'value'))->default(value: SubscriptionStatus::Pending->value);
             $table->timestamps();
-        
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
